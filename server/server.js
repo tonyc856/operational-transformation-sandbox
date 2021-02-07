@@ -4,6 +4,7 @@ const express = require("express");
 const ShareDBMingoMemory = require("sharedb-mingo-memory");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const WebSocket = require("ws");
+const PORT = process.env.PORT || "8080";
 
 // Start ShareDB
 const share = new ShareDB({ db: new ShareDBMingoMemory() });
@@ -13,8 +14,8 @@ const app = express();
 app.use(express.static("static"));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server: server });
-server.listen(8080, () => {
-  console.log("Listening on http://localhost:8080");
+server.listen(PORT, () => {
+  console.log(`Listening on http://localhost:${PORT}`);
 });
 
 // Connect any incoming WebSocket connection with ShareDB
@@ -53,3 +54,10 @@ connection.createFetchQuery("notes", {}, {}, function (err, results) {
     });
   }
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client", "build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
+  });
+}

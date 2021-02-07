@@ -1,0 +1,20 @@
+{
+  "name": "operational-transformation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build && cd ../server && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonyc856/operational-transformation-sandbox.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tonyc856/operational-transformation-sandbox/issues"
+  },
+  "homepage": "https://github.com/tonyc856/operational-transformation-sandbox#readme"
+}
