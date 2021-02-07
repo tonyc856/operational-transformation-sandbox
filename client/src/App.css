@@ -1,0 +1,4 @@
+#note {
+  min-height: calc(100vh - 114px);
+  width: 100%;
+}

@@ -1,0 +1,55 @@
+const http = require("http");
+const ShareDB = require("sharedb");
+const express = require("express");
+const ShareDBMingoMemory = require("sharedb-mingo-memory");
+const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
+const WebSocket = require("ws");
+
+// Start ShareDB
+const share = new ShareDB({ db: new ShareDBMingoMemory() });
+
+// Create a WebSocket server
+const app = express();
+app.use(express.static("static"));
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server: server });
+server.listen(8080, () => {
+  console.log("Listening on http://localhost:8080");
+});
+
+// Connect any incoming WebSocket connection with ShareDB
+wss.on("connection", function (ws) {
+  console.log("A client connected to the websocket");
+
+  const stream = new WebSocketJSONStream(ws);
+  share.listen(stream);
+});
+
+// Create initial documents
+const notes = [
+  {
+    title: "Team Lunch",
+    author: "Tony",
+    date: "02/04/2021",
+    text: "Get lunch with the Wargaming team at Panera Bread.",
+  },
+  {
+    title: "Spend time with my dog",
+    author: "Tony",
+    date: "02/05/2021",
+    text: "Take a walk in the evening with my dog Max.",
+  },
+];
+const connection = share.connect();
+connection.createFetchQuery("notes", {}, {}, function (err, results) {
+  if (err) {
+    throw err;
+  }
+
+  if (results.length === 0) {
+    notes.forEach(function (note, index) {
+      const doc = connection.get("notes", `${index}`);
+      doc.create(note);
+    });
+  }
+});
