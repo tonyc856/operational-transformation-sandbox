@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import ShareDB from "sharedb/lib/client";
 import Box from "@material-ui/core/Box";
@@ -9,8 +9,12 @@ import Grid from "@material-ui/core/Grid";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 const BACKSPACE_KEYCODE = 8;
+const URL =
+  process.env.NODE_ENV === "development"
+    ? "ws://localhost:8080"
+    : `ws://notes-ot.herokuapp.com:${process.env.PORT}`;
 
-const socket = new ReconnectingWebSocket("ws://localhost:8080");
+const socket = new ReconnectingWebSocket(URL);
 const connection = new ShareDB.Connection(socket);
 
 const notes = [
@@ -32,6 +36,9 @@ export default function NoteList() {
   const [selectedNoteId, setSelectedNoteId] = useState("");
   const [notes, setNotes] = useState([]);
   const isBackSpacePressed = useRef(false);
+  const textareaRef = useRef();
+  //const docPresence = useRef();
+  //const localPresence = useRef();
 
   useEffect(() => {
     const query = connection.createFetchQuery(
@@ -40,6 +47,9 @@ export default function NoteList() {
       {},
       (err, results) => {
         setNotes(results);
+        if (results) {
+          setSelectedNoteId(results[0].id);
+        }
       }
     );
 
@@ -59,6 +69,15 @@ export default function NoteList() {
         const newNotes = [...notes];
         setNotes(newNotes);
       });
+      //docPresence.current = connection.getDocPresence("notes", selectedNoteId);
+      //docPresence.current.subscribe();
+      //localPresence.current = docPresence.current.create();
+      //console.log(docPresence.current);
+
+      return () => {
+        doc.unsubscribe();
+        //docPresence.current.destroy();
+      };
     }
   }, [selectedNoteId]);
 
@@ -134,6 +153,7 @@ export default function NoteList() {
                 id="note"
                 p={2}
                 component={TextareaAutosize}
+                ref={textareaRef}
                 value={notes[selectedNoteId].data.text}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}

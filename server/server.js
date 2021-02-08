@@ -8,7 +8,7 @@ const WebSocket = require("ws");
 const PORT = process.env.PORT || "8080";
 
 // Start ShareDB
-const share = new ShareDB({ db: new ShareDBMingoMemory() });
+const share = new ShareDB({ db: new ShareDBMingoMemory(), presence: true });
 
 // Create a WebSocket server
 const app = express();
