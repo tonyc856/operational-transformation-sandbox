@@ -6,7 +6,7 @@ const ShareDBMingoMemory = require("sharedb-mingo-memory");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const WebSocket = require("ws");
 //const PORT = process.env.PORT || "8080";
-const PORT = "80";
+const PORT = "443";
 
 // Start ShareDB
 const share = new ShareDB({ db: new ShareDBMingoMemory(), presence: true });
