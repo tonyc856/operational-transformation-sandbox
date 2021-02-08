@@ -10,9 +10,7 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 const BACKSPACE_KEYCODE = 8;
 const URL =
-  process.env.NODE_ENV === "development"
-    ? "ws://localhost:8080"
-    : `ws://notes-ot.herokuapp.com:${process.env.PORT}`;
+  process.env.NODE_ENV === "development" ? "ws://localhost:8080" : undefined;
 console.log(URL);
 
 const socket = new ReconnectingWebSocket(URL);
