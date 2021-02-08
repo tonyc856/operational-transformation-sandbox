@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/tonyc856/operational-transformation-sandbox/issues"
   },
-  "homepage": "https://github.com/tonyc856/operational-transformation-sandbox#readme"
+  "homepage": "https://github.com/tonyc856/operational-transformation-sandbox#readme",
+  "engines": {
+    "node": "14.15.4"
+  }
 }

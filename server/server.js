@@ -14,6 +14,14 @@ const app = express();
 app.use(express.static("static"));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server: server });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client", "build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
+  });
+}
+
 server.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
 });
@@ -54,10 +62,3 @@ connection.createFetchQuery("notes", {}, {}, function (err, results) {
     });
   }
 });
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client", "build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client", "build", "index.html"));
-  });
-}
