@@ -12,7 +12,7 @@ const BACKSPACE_KEYCODE = 8;
 const URL =
   process.env.NODE_ENV === "development"
     ? "ws://localhost:8080"
-    : `wss://notes-ot.herokuapp.com;
+    : `wss://notes-ot.herokuapp.com`;
 console.log(URL);
 
 const socket = new ReconnectingWebSocket(URL);
