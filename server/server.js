@@ -1,3 +1,4 @@
+const path = require("path");
 const http = require("http");
 const ShareDB = require("sharedb");
 const express = require("express");
