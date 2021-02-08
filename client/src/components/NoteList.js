@@ -13,6 +13,7 @@ const URL =
   process.env.NODE_ENV === "development"
     ? "ws://localhost:8080"
     : `ws://notes-ot.herokuapp.com:${process.env.PORT}`;
+console.log(URL);
 
 const socket = new ReconnectingWebSocket(URL);
 const connection = new ShareDB.Connection(socket);
