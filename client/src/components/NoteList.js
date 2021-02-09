@@ -48,8 +48,8 @@ export default function NoteList() {
       {},
       {},
       (err, results) => {
-        setNotes(results);
         if (results) {
+          setNotes(results);
           setSelectedNoteId(results[0].id);
         }
       }
@@ -74,13 +74,14 @@ export default function NoteList() {
         selectionEnd.current = textareaRef.current.selectionEnd;
         setNotes(newNotes);
       });
+
       //docPresence.current = connection.getDocPresence("notes", selectedNoteId);
       //docPresence.current.subscribe();
       //localPresence.current = docPresence.current.create();
       //console.log(docPresence.current);
 
       return () => {
-        doc.unsubscribe();
+        //doc.unsubscribe();
         //docPresence.current.destroy();
       };
     }
@@ -138,13 +139,6 @@ export default function NoteList() {
   };
 
   const decrementSelectionPositions = () => {
-    if (
-      // if cursor is at the end of the last character of the text, don't decrement
-      textareaRef.current.selectionStart === textareaRef.current.value.length
-    ) {
-      return;
-    }
-
     textareaRef.current.selectionStart--;
     textareaRef.current.selectionEnd--;
   };
