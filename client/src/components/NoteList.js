@@ -37,6 +37,7 @@ export default function NoteList() {
   const [notes, setNotes] = useState([]);
   const isBackSpacePressed = useRef(false);
   const textareaRef = useRef();
+  const cursorPosition = useRef();
   //const docPresence = useRef();
   //const localPresence = useRef();
 
@@ -67,6 +68,7 @@ export default function NoteList() {
       });
       doc.on("op", (op, source) => {
         const newNotes = [...notes];
+        cursorPosition.current = textareaRef.current.selectionStart;
         setNotes(newNotes);
       });
       //docPresence.current = connection.getDocPresence("notes", selectedNoteId);
@@ -80,6 +82,16 @@ export default function NoteList() {
       };
     }
   }, [selectedNoteId]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      // persist user's cursor position in the text document
+      textareaRef.current.setSelectionRange(
+        cursorPosition.current,
+        cursorPosition.current
+      );
+    }
+  }, [notes]);
 
   const handleChange = (event) => {
     console.log("handleChange");
