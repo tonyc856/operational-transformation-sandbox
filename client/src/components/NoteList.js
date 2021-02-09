@@ -68,6 +68,7 @@ export default function NoteList() {
       });
       doc.on("op", (op, source) => {
         const newNotes = [...notes];
+        // remember user's cursor position before updating notes state
         cursorPosition.current = textareaRef.current.selectionStart;
         setNotes(newNotes);
       });
