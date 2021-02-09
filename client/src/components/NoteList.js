@@ -37,7 +37,8 @@ export default function NoteList() {
   const [notes, setNotes] = useState([]);
   const isBackSpacePressed = useRef(false);
   const textareaRef = useRef();
-  const cursorPosition = useRef();
+  const selectionStart = useRef();
+  const selectionEnd = useRef();
   //const docPresence = useRef();
   //const localPresence = useRef();
 
@@ -69,7 +70,8 @@ export default function NoteList() {
       doc.on("op", (op, source) => {
         const newNotes = [...notes];
         // remember user's cursor position before updating notes state
-        cursorPosition.current = textareaRef.current.selectionStart;
+        selectionStart.current = textareaRef.current.selectionStart;
+        selectionEnd.current = textareaRef.current.selectionEnd;
         setNotes(newNotes);
       });
       //docPresence.current = connection.getDocPresence("notes", selectedNoteId);
@@ -88,8 +90,8 @@ export default function NoteList() {
     if (textareaRef.current) {
       // persist user's cursor position in the text document
       textareaRef.current.setSelectionRange(
-        cursorPosition.current,
-        cursorPosition.current
+        selectionStart.current,
+        selectionEnd.current
       );
     }
   }, [notes]);
@@ -113,10 +115,11 @@ export default function NoteList() {
     const text = event.target.value;
 
     if (event.keyCode === BACKSPACE_KEYCODE) {
+      event.preventDefault();
       if (text) {
         const stringToDelete = text.charAt(cursorPosition - 1);
         const op = [{ p: ["text", cursorPosition - 1], sd: stringToDelete }];
-        sumbitOp(selectedNoteId, op);
+        sumbitOp(selectedNoteId, op, decrementSelectionPositions);
         isBackSpacePressed.current = true;
       }
     } else {
@@ -124,13 +127,26 @@ export default function NoteList() {
     }
   };
 
-  const sumbitOp = (selectedNoteId, op) => {
+  const sumbitOp = (selectedNoteId, op, callback = () => {}) => {
     connection.get("notes", selectedNoteId).submitOp(op, (err) => {
       if (err) {
         console.error(err);
         return;
       }
+      callback();
     });
+  };
+
+  const decrementSelectionPositions = () => {
+    if (
+      // if cursor is at the end of the last character of the text, don't decrement
+      textareaRef.current.selectionStart === textareaRef.current.value.length
+    ) {
+      return;
+    }
+
+    textareaRef.current.selectionStart--;
+    textareaRef.current.selectionEnd--;
   };
 
   const NoteTitle = ({ note }) => {
