@@ -39,6 +39,8 @@ export default function NoteList() {
   const textareaRef = useRef();
   const selectionStart = useRef();
   const selectionEnd = useRef();
+  const stringToDelete = useRef();
+  const deleteSelectionStart = useRef();
   //const docPresence = useRef();
   //const localPresence = useRef();
 
@@ -107,20 +109,28 @@ export default function NoteList() {
       const stringToInsert = text.charAt(cursorPosition - 1);
       const op = [{ p: ["text", cursorPosition - 1], si: stringToInsert }];
       sumbitOp(selectedNoteId, op);
+    } else {
+      const op = [
+        {
+          p: ["text", deleteSelectionStart.current - 1],
+          sd: stringToDelete.current,
+        },
+      ];
+      sumbitOp(selectedNoteId, op, () => {
+        stringToDelete.current = "";
+        deleteSelectionStart.current = null;
+      });
     }
   };
 
   const handleKeyDown = (event) => {
     console.log("handleKeyDown");
-    const cursorPosition = event.target.selectionStart;
     const text = event.target.value;
 
     if (event.keyCode === BACKSPACE_KEYCODE) {
-      event.preventDefault();
       if (text) {
-        const stringToDelete = text.charAt(cursorPosition - 1);
-        const op = [{ p: ["text", cursorPosition - 1], sd: stringToDelete }];
-        sumbitOp(selectedNoteId, op, decrementSelectionPositions);
+        deleteSelectionStart.current = event.target.selectionStart;
+        stringToDelete.current = text.charAt(deleteSelectionStart.current - 1);
         isBackSpacePressed.current = true;
       }
     } else {
@@ -136,11 +146,6 @@ export default function NoteList() {
       }
       callback();
     });
-  };
-
-  const decrementSelectionPositions = () => {
-    textareaRef.current.selectionStart--;
-    textareaRef.current.selectionEnd--;
   };
 
   const NoteTitle = ({ note }) => {
