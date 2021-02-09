@@ -122,7 +122,14 @@ export default function NoteList() {
 
   const NoteTitle = ({ note }) => {
     return (
-      <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+      <Box
+        fontWeight={
+          note.id === selectedNoteId ? "fontWeightBold" : "fontWeightRegular"
+        }
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
         {note.data.text}
       </Box>
     );

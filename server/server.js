@@ -40,14 +40,20 @@ const notes = [
   {
     title: "Team Lunch",
     author: "Tony",
-    date: "02/04/2021",
+    date: "02/08/2021",
     text: "Get lunch with the Wargaming team at Panera Bread.",
   },
   {
     title: "Spend time with my dog",
     author: "Tony",
+    date: "02/06/2021",
+    text: "Take a walk in the evening with my dog Max at the beach.",
+  },
+  {
+    title: "Note 3",
+    author: "Tony",
     date: "02/05/2021",
-    text: "Take a walk in the evening with my dog Max.",
+    text: "Do my laundry",
   },
 ];
 const connection = share.connect();
