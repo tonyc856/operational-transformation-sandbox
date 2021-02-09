@@ -120,6 +120,14 @@ export default function NoteList() {
     });
   };
 
+  const NoteTitle = ({ note }) => {
+    return (
+      <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+        {note.data.text}
+      </Box>
+    );
+  };
+
   return (
     <>
       <Grid container>
@@ -138,7 +146,7 @@ export default function NoteList() {
                   selected={selectedNoteId === note.id}
                 >
                   <ListItemText
-                    primary={note.data.title}
+                    primary={<NoteTitle note={note} />}
                     secondary={secondaryText}
                   />
                 </ListItem>
